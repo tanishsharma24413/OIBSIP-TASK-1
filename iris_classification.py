@@ -1,0 +1,44 @@
+# Iris Flower Classification
+
+# Step 1: Import libraries
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+# Step 2: Load dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+feature_names = iris.feature_names
+target_names = iris.target_names
+
+# Convert to DataFrame for better visualization
+df = pd.DataFrame(X, columns=feature_names)
+df['species'] = y
+
+print("First 5 rows of dataset:")
+print(df.head())
+
+# Step 3: Split into train/test sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Step 4: Scale features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Step 5: Train model (KNN Classifier)
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+# Step 6: Make predictions
+y_pred = knn.predict(X_test)
+
+# Step 7: Evaluate model
+print("\nAccuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=target_names))
